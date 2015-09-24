@@ -19,6 +19,7 @@ type Message struct {
 	ConnID  int     // Unique client-server connection ID.
 	SeqNum  int     // Message sequence number.
 	Payload []byte  // Data message payload.
+	Hash    []byte  // Hash of message.
 }
 
 // NewConnect returns a new connect message.
@@ -27,13 +28,14 @@ func NewConnect() *Message {
 }
 
 // NewData returns a new data message with the specified connection ID,
-// sequence number, and payload.
-func NewData(connID, seqNum int, payload []byte) *Message {
+// sequence number, payload, and hash.
+func NewData(connID, seqNum int, payload []byte, hash []byte) *Message {
 	return &Message{
 		Type:    MsgData,
 		ConnID:  connID,
 		SeqNum:  seqNum,
 		Payload: payload,
+		Hash:    hash,
 	}
 }
 
@@ -52,15 +54,16 @@ func NewAck(connID, seqNum int) *Message {
 //     msg := NewConnect()
 //     fmt.Printf("Connect message: %s\n", msg)
 func (m *Message) String() string {
-	var name, payload string
+	var name, payload, hash string
 	switch m.Type {
 	case MsgConnect:
 		name = "Connect"
 	case MsgData:
 		name = "Data"
 		payload = " " + string(m.Payload)
+		hash = " " + string(m.Hash)
 	case MsgAck:
 		name = "Ack"
 	}
-	return fmt.Sprintf("[%s %d %d%s]", name, m.ConnID, m.SeqNum, payload)
+	return fmt.Sprintf("[%s %d %d%s %s]", name, m.ConnID, m.SeqNum, payload, hash)
 }
