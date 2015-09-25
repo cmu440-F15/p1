@@ -91,6 +91,11 @@ func (c *UDPConn) write(b []byte, addr *UDPAddr) (int, error) {
 		// Drop it, but make it look like it was successful.
 		return len(b), nil
 	}
+	if corruptIt(int(msgCorruptionPercent)) {
+		for i := 0; i < len(b); i++ {
+			b[i] += 1
+		}
+	}
 	if addr == nil {
 		n, err := c.nconn.Write(b)
 		if err != nil {
@@ -114,4 +119,8 @@ func (c *UDPConn) Close() error {
 
 func dropIt(dropPercent int) bool {
 	return rand.Intn(100) < dropPercent
+}
+
+func corruptIt(corruptionPercent int) bool {
+	return rand.Intn(100) < corruptionPercent
 }

@@ -9,6 +9,7 @@ var (
 	clientWriteDropPercent uint32
 	serverReadDropPercent  uint32
 	serverWriteDropPercent uint32
+	msgCorruptionPercent   uint32
 )
 
 // SetReadDropPercent sets the read drop percent for both clients and servers.
@@ -21,6 +22,12 @@ func SetReadDropPercent(p int) {
 func SetWriteDropPercent(p int) {
 	SetClientWriteDropPercent(p)
 	SetServerWriteDropPercent(p)
+}
+
+func SetMsgCorruptionPercent(p int) {
+	if 0 <= 0 && p <= 100 {
+		atomic.StoreUint32(&msgCorruptionPercent, uint32(p))
+	}
 }
 
 // SetClientReadDropPercent sets the read drop percent for clients.
