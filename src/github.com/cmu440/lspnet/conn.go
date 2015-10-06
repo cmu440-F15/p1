@@ -91,7 +91,7 @@ func (c *UDPConn) write(b []byte, addr *UDPAddr) (int, error) {
 		// Drop it, but make it look like it was successful.
 		return len(b), nil
 	}
-	if corruptIt(int(msgCorruptionPercent)) {
+	if corruptIt(int(atomic.LoadUint32(&msgCorruptionPercent))) {
 		for i := 0; i < len(b); i++ {
 			b[i] += 1
 		}
