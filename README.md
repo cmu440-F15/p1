@@ -50,11 +50,11 @@ Usage of bin/srunner:
   -wsize=1: window size
 ```
 
-We have also provided pre-compiled executables for you to use called `srunner-sols` and `crunner-sols`. 
+We have also provided pre-compiled executables for you to use called `srunner-sols` and `crunner-sols`.
 These binaries were compiled against our reference LSP implementation,
-so you might find them useful in the early stages of the development process (for example, if you wanted to test your 
+so you might find them useful in the early stages of the development process (for example, if you wanted to test your
 `Client` implementation but haven’t finished implementing the `Server` yet, etc.). Two separate binaries
-are provided for Linux and Mac OS X machines (Windows is not supported at this time). 
+are provided for Linux and Mac OS X machines (Windows is not supported at this time).
 
 As an example, to start an echo server on port `6060` on an AFS cluster machine, execute the following command:
 
@@ -85,7 +85,7 @@ go test -race -run=TestName
 
 ### Submitting to Autolab
 
-As with project 0, we will be using Autolab to grade your submissions for this project. 
+As with project 0, we will be using Autolab to grade your submissions for this project.
 We will run some&mdash;but not all&mdash;of the tests with the race detector enabled.
 
 To submit your code to Autolab, create a `lsp.tar` file containing your LSP implementation as follows:
@@ -141,49 +141,6 @@ $GOPATH/bin/client localhost:6060 bradfitz 9999
 Note that you will need to use the `os.Args` variable in your code to access the user-specified
 command line arguments.
 
-### Running the tests
-
-Unlike in previous projects, the tests for part B will _not_ be open source. Instead, we have
-provided three binaries&mdash;`ctest`, `mtest`, and `stest`&mdash;for you to use to test your code. 
-The tests are compiled for both Linux and Mac OS X machines (Windows is not supported at this time).
-
-To execute the tests, make sure your `GOPATH` is properly set and then execute them as follows (note
-that you for each binary, you can activate verbose-mode by specifying the `-v` flag). _Make sure you
-compile your `client`, `miner`, and `server` programs using `go install` before running the tests!_
-
-```bash
-# Run ctest on a Mac OS X machine in non-verbose mode.
-$GOPATH/bin/darwin_amd64/ctest
-
-# Run mtest on a Linux machine in verbose mode.
-$GOPATH/bin/linux_amd64/mtest -v
-```
-
-When you run the tests, one of the first things you'll probably notice is that none of the logs
-you print in both the code you write for part A and part B will not appear. This is because
-our test binaries must capture the output of your programs in order to test that your request clients
-print the correct result message to standard output at the end of each test. An alternative to
-logging messages to standard output is to use a `log.Logger` and direct them to a file instead, as
-illustrated by the code below:
-
-```go
-const (
-	name = "log.txt"
-	flag = os.O_RDWR | os.O_CREATE 
-	perm = os.FileMode(0666)
-)
-
-file, err := os.OpenFile(name, flag, perm)
-if err != nil {
-	return
-}
-
-LOGF := log.New(file, "", log.Lshortfile|log.Lmicroseconds)
-LOGF.Println("Bees?!", "Beads.", "Gob's not on board.")
-```
-
-Don't forget to call `file.Close()` when you are done using it!
-
 ### Submitting to Autolab
 
 To submit your code to Autolab, create a `cmu440.tar` file containing your part A and part B implementation
@@ -199,7 +156,7 @@ tar -cvf cmu440.tar cmu440/
 ### Reading the API Documentation
 
 Before you begin the project, you should read and understand all of the starter code we provide.
-To make this experience a little less traumatic (we know, it's a lot :P), 
+To make this experience a little less traumatic (we know, it's a lot :P),
 fire up a web server and read the documentation in a browser by executing the following command:
 
 ```sh
@@ -209,13 +166,3 @@ godoc -http=:6060 &
 Then, navigate to [localhost:6060/pkg/github.com/cmu440](http://localhost:6060/pkg/github.com/cmu440) in a browser.
 Note that you can execute this command from anywhere in your system (assuming your `GOPATH`
 is pointing to the project's root `p1/` directory).
-
-### Using Go on AFS
-
-For those students who wish to write their Go code on AFS (either in a cluster or remotely), you will
-need to set the `GOROOT` environment variable as follows (this is required because Go is installed
-in a custom location on AFS machines):
-
-```bash
-export GOROOT=/usr/local/lib/go
-```
